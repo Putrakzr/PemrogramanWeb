@@ -1,31 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi To Do list</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>To Do List</h1>
-        <form action="add.php" method="post" class="add-form">
-            <input type="text" name="task" id="task" placeholder="Pekerjaan baru..." class="task-input">
-            <button type="submit" class="add-btn">Tambahkan</button>
-        </form>
-        <ul class="task-list">
-            <?php include 'tasks.php'; ?>
-        </ul>
-    </div>
+<?php 
 
-    <script>
-        function updateTask(index) {
-            var checkbox = document.getElementById('task' + index);
-            var label = checkbox.nextElementSibling;
-            var tasks = label.innerText.split('\n');
-            tasks[0] = checkbox.checked ? "<s>" + tasks[0] + "</s>" : tasks[0].replace("<s>", "").replace("</s>", "");
-            label.innerHTML = tasks.join('\n');
-        }
-    </script>
-</body>
-</html>
+	@ob_start();
+	session_start();
+
+	if(!empty($_SESSION['admin'])){
+		require 'config.php';
+		include $view;
+		$lihat = new view($config);
+		$toko = $lihat -> toko();
+		//  admin
+			include 'admin/template/header.php';
+			include 'admin/template/sidebar.php';
+				if(!empty($_GET['page'])){
+					include 'admin/module/'.$_GET['page'].'/index.php';
+				}else{
+					include 'admin/template/home.php';
+				}
+			include 'admin/template/footer.php';
+		// end admin
+	}else{
+		echo '<script>window.location="login.php";</script>';
+		exit;
+	}
+?>
+
